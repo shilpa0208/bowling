@@ -63,15 +63,36 @@ npm run typecheck
 
 ## AI assistance
 
-**Prompt summary:** Implement a bowling score calculator in Typescript. It accepts an array of rolls, where numeric values 0–9 represent pins knocked down, "X" represents a strike, and "/" represents a spare. Return an array containing the score for each frame the player has started, using null when a frame’s score cannot yet be calculated because it needs future rolls.Follow standard ten-pin bowling rules: a strike scores 10 plus the next two rolls; a spare scores 10 plus the next roll; an open frame scores the sum of its two rolls. A roll used as a strike or spare bonus must still count toward its own frame. The 10th frame has its standard bonus-roll rules.
+### Prompt summary
 
-The assumptions are:
-The input contains all rolls so far, in chronological order. Future rolls are omitted.
-Every starting frame appears in the result. A frame awaiting its second roll or bonuses returns null. An empty game returns [].
-Frame 10 gets one bonus roll after a spare or two after a strike. These stay in frame 10 and cannot earn further rolls.
-Invalid symbols, impossible pin totals, misplaced strikes or spares, and rolls after a completed game throw an error.
-Numeric pairs totaling 10, such as [5, 5], are accepted as spares too.
+Implement a TypeScript bowling score calculator that accepts an array of rolls:
 
-The prompt then clarified the assumptions about incomplete games, the 10th frame, and invalid input; an explanation of the parsing and scoring approach; walkthroughs of `[4, 5, "X", 8]` and `[4, 5, "X", 8, 1]`; and tests for strikes, spares, consecutive strikes, incomplete games, and 10th-frame bonuses. Follow-up prompts explored complexity and bowling terminology.
+- Numbers `0–9` represent pins knocked down.
+- `"X"` represents a strike, and `"/"` represents a spare.
+- Return a score for every started frame, using `null` when more rolls are needed.
+- A strike scores 10 plus the next two rolls; a spare scores 10 plus the next roll; an open frame scores the sum of its two rolls.
+- Rolls used as bonuses still count toward their own frame.
+- Apply standard 10th-frame bonus-roll rules.
 
-**How AI was used and evaluated:** ChatGPT helped clarify scoring rules for bowling and produce an initial implementation, tests, and documentation. Follow-up discussion worked through examples and informed the README's bowling glossary. I then used Copilot in VS Code and workspace tools to inspect and refine the solution, including adding graceful error reporting in the runner, extracting `readRoll`, `parseFrame`, and `parseTenthFrame` from `validateAndParseRolls` to make frame parsing easier to follow, and renaming variables such as `first` and `second` to `firstRollPins` and `secondRollPins` and `start` to `startIndex`. I also added comments and documented the `score` script. I used terminal commands to run the automated tests and TypeScript typecheck during refinement; both passed. For example, I kept parsing helpers private and extracted a dedicated 10th-frame helper because its bonus-roll and rack rules differ from earlier frames. I verified those behaviors through the public scoring API rather than exposing internal helpers just for testing.
+#### Input assumptions
+
+- Rolls are supplied in chronological order; future rolls are omitted.
+- Every started frame appears in the result. Incomplete frames return `null`, and empty input returns `[]`.
+- The 10th frame earns one bonus roll after a spare or two after a strike. Bonus rolls stay in that frame and cannot earn further rolls.
+- Invalid symbols, impossible pin totals, misplaced strikes or spares, and rolls after a completed game throw an error.
+- Numeric pairs totaling 10, such as `[5, 5]`, are accepted as spares.
+
+#### Follow-up prompts
+
+The prompt was refined to clarify incomplete-game behavior, 10th-frame rules, and invalid input. It also requested an explanation of the parsing and scoring approach, walkthroughs of `[4, 5, "X", 8]` and `[4, 5, "X", 8, 1]`, and tests covering strikes, spares, consecutive strikes, incomplete games, and 10th-frame bonuses. Further discussion explored complexity and bowling terminology.
+
+### AI use and evaluation
+
+- ChatGPT helped clarify bowling rules and produce an initial implementation, tests, and documentation. Follow-up discussion worked through examples and informed the bowling glossary.
+- Copilot in VS Code and workspace tools were used to inspect and refine the solution:
+  - Added graceful error reporting in the runner.
+  - Extracted `readRoll`, `parseFrame`, and `parseTenthFrame` from `validateAndParseRolls` to make frame parsing easier to follow.
+  - Renamed variables such as `first` and `second` to `firstRollPins` and `secondRollPins`, and `start` to `startIndex`.
+  - Added comments and documented the `score` script.
+- Automated tests and the TypeScript typecheck were run during refinement; both passed.
+- Parsing helpers remain private. A dedicated 10th-frame helper handles its distinct bonus-roll and rack rules, and those behaviors were verified through the public scoring API rather than exposing internal helpers for testing.
