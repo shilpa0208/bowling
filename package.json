@@ -1,0 +1,15 @@
+{
+  "name": "bowling-score-calculator",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "score": "node run.ts",
+    "test": "node --test bowling.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3"
+  }
+}
